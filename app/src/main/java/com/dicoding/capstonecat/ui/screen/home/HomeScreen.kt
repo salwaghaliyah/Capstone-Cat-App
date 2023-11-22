@@ -20,5 +20,5 @@ fun HomeScreen(
 fun HomeContent(
 
 ) {
-    Text(text = "Home")
+    Text(text = "Homeee")
 }
