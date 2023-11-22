@@ -37,7 +37,7 @@ fun CatApp(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    Scaffold(
+    Scaffold(git
         bottomBar = {
             if (currentRoute != Screen.Detail.route) {
                 BottomBar(navController)
