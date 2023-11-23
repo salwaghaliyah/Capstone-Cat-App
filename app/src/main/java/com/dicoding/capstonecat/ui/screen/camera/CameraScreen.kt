@@ -105,7 +105,7 @@ fun imageCaptureFromCamera()
             },
             contentColor = Color.Black
         ) {
-            Icon(Icons.Filled.PlayArrow, contentDescription = "about_page")
+            Icon(painter = painterResource(id = R.drawable.ic_camera), contentDescription = "camera")
         }
     }
 
