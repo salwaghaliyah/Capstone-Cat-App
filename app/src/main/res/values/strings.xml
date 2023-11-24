@@ -3,4 +3,9 @@
     <string name="item_title_home">Home_page</string>
     <string name="item_title_camera">camera_page</string>
     <string name="item_title_favorite">favorite_page</string>
+    <string name="home_prolog">Hello, Human!</string>
+    <string name="text_card_home">Ciptakan Kebahagiaan bagi Kucing Kesayangan!</string>
+    <string name="search_cat">Temukan kucingmu...</string>
+    <string name="scroll_to_top">Scroll to Top</string>
+    <string name="fav_prolog">Your Favorite Cat</string>
 </resources>

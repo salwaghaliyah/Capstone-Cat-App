@@ -1,8 +1,51 @@
 package com.dicoding.capstonecat.ui.screen.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.dicoding.capstonecat.R
+import com.dicoding.capstonecat.ui.components.CatItem
+import com.dicoding.capstonecat.ui.components.ScrollToTopButton
+import com.dicoding.capstonecat.ui.theme.CapstoneCatTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -12,13 +55,149 @@ fun HomeScreen(
 //    ),
     navigateToDetail: (Int) -> Unit,
 ) {
-    HomeContent()
+    HomeContent(modifier)
 }
 
 
 @Composable
 fun HomeContent(
-
+    modifier: Modifier = Modifier
 ) {
-    Text(text = "Homeee")
+    Box(modifier = modifier) {
+        val dummyFunction: (String) -> Unit = { str ->
+            // Logika yang diinginkan di sini
+            println("Mencari kucing: $str")
+        }
+        val scope = rememberCoroutineScope()
+        val gridState = rememberLazyGridState()
+        val showButton: Boolean by remember {
+            derivedStateOf { gridState.firstVisibleItemIndex > 4 }
+        }
+        LazyVerticalGrid(
+            state = gridState,
+            columns = GridCells.Adaptive(130.dp),
+            contentPadding = PaddingValues(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp)
+        ) {
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                Text(
+                    text = stringResource(R.string.home_prolog),
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        lineHeight = 36.sp,
+                        fontFamily = FontFamily(Font(R.font.mrexbold)),
+                        fontWeight = FontWeight(800),
+                        color = Color(0xFF3F3E3F),
+                    ),
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                )
+            }
+
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                Card(
+                    shape = RoundedCornerShape(size = 14.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 190.dp),
+                    elevation = CardDefaults.cardElevation(12.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.text_card_home),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            lineHeight = 22.sp,
+                            fontFamily = FontFamily(Font(R.font.mrbold)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF000000),
+                        ),
+                        modifier = Modifier
+                            .padding(start = 22.dp, top = 34.dp, end = 141.dp)
+                    )
+                }
+            }
+
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                SearchBar(
+                    query = "Persia",
+                    onQueryChange = dummyFunction,
+                )
+            }
+
+            items(30) { index ->
+                CatItem(
+                    imageUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+                    name = "ScottishFold $index"
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = showButton,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .align(Alignment.BottomCenter)
+        ) {
+            ScrollToTopButton(
+                onClick = {
+                    scope.launch {
+                        gridState.scrollToItem(index = 0)
+                    }
+                }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+  ) {
+    androidx.compose.material3.SearchBar(
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = {},
+        active = false,
+        onActiveChange = {},
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
+        placeholder = {
+            Text(stringResource(R.string.search_cat))
+        },
+        shape = MaterialTheme.shapes.large,
+        modifier = modifier
+            .fillMaxWidth()
+            //.border(width = 1.dp, color = Color(0xFF000000), shape = RoundedCornerShape(size = 14.dp))
+    ) {
+    }
+
+
+}
+
+@Composable
+@Preview (showBackground = true)
+fun HomeContentPreview() {
+    CapstoneCatTheme {
+        HomeContent()
+    }
 }
