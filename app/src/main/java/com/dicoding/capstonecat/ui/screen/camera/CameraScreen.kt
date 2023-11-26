@@ -35,7 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
@@ -64,14 +69,16 @@ fun imageCaptureFromCamera()
         context.packageName + ".provider", file
     )
 
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-            imageUri = uri
-        }
-
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
     }
+
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                capturedImageUri = uri
+            }
+        }
 
 
     val cameraLauncher =
@@ -94,6 +101,25 @@ fun imageCaptureFromCamera()
         }
     }
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Top, // Letakkan di bagian atas
+        horizontalAlignment = Alignment.CenterHorizontally, // Posisikan di tengah horizontal
+
+    ) {
+        Text(
+            text = "Scan Your Cat Here !!",
+            style = TextStyle(
+                fontSize = 24.sp,
+                lineHeight = 36.sp,
+                fontFamily = FontFamily(Font(R.font.mrexbold)),
+                fontWeight = FontWeight(800),
+                color = Color(0xFF3F3E3F),
+            )
+        )
+    }
 
     Column(
         Modifier
@@ -159,31 +185,37 @@ fun imageCaptureFromCamera()
         }
     }
 
+    Column(
+        modifier = Modifier
+            .size(550.dp)
+            .height(10.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        if (capturedImageUri.path?.isNotEmpty() == true)
+        {
+            Image(
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .height(430.dp)
+                    .size(1000.dp, 400.dp),
+                painter = rememberImagePainter(capturedImageUri),
+                contentDescription = null
+            )
+        }
+        else
+        {
+            Image(
+                modifier = Modifier
+                    .padding(16.dp, 8.dp)
+                    .height(500.dp)
+                    .size(1000.dp, 400.dp),
+                painter = painterResource(id = R.drawable.kucing),
+                contentDescription = null
+            )
+        }
+    }
 
-    if (capturedImageUri.path?.isNotEmpty() == true || imageUri?.path?.isNotEmpty() == true)
-    {
-        Image(
-            modifier = Modifier
-                .padding(16.dp, 8.dp),
-            painter = rememberImagePainter(capturedImageUri),
-            contentDescription = null
-        )
-        Image(
-            modifier = Modifier
-                .padding(16.dp, 8.dp),
-            painter = rememberImagePainter(imageUri),
-            contentDescription = null
-        )
-    }
-    else
-    {
-        Image(
-            modifier = Modifier
-                .padding(16.dp, 8.dp),
-            painter = painterResource(id = R.drawable.kucing),
-            contentDescription = null
-        )
-    }
+
 
 }
 
