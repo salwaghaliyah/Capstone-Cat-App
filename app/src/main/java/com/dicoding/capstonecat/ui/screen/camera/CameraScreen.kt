@@ -187,7 +187,7 @@ fun imageCaptureFromCamera()
 
     Column(
         modifier = Modifier
-            .size(550.dp)
+            .fillMaxSize()
             .height(10.dp),
         verticalArrangement = Arrangement.Center
     ) {
@@ -208,7 +208,7 @@ fun imageCaptureFromCamera()
                 modifier = Modifier
                     .padding(16.dp, 8.dp)
                     .height(500.dp)
-                    .size(1000.dp, 400.dp),
+                    .size(1200.dp, 500.dp),
                 painter = painterResource(id = R.drawable.kucing),
                 contentDescription = null
             )
