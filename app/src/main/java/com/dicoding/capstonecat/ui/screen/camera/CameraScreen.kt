@@ -180,7 +180,7 @@ fun imageCaptureFromCamera()
         Image(
             modifier = Modifier
                 .padding(16.dp, 8.dp),
-            painter = painterResource(id = R.drawable.ic_image),
+            painter = painterResource(id = R.drawable.kucing),
             contentDescription = null
         )
     }
