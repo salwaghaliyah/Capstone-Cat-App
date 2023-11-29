@@ -8,4 +8,5 @@
     <string name="search_cat">Temukan kucingmu...</string>
     <string name="scroll_to_top">Scroll to Top</string>
     <string name="fav_prolog">Your Favorite Cat</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

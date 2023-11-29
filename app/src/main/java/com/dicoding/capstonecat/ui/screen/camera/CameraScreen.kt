@@ -2,6 +2,7 @@ package com.dicoding.capstonecat.ui.screen.camera
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -14,13 +15,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -44,7 +51,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
+import com.dicoding.capstonecat.DetailActivity
 import com.dicoding.capstonecat.R
+import com.dicoding.capstonecat.ui.theme.Purple80
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -69,21 +78,25 @@ fun imageCaptureFromCamera()
         context.packageName + ".provider", file
     )
 
+
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
     }
+
+    var isImageCaptured by remember { mutableStateOf(false) }
 
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 capturedImageUri = uri
+                isImageCaptured = true // Menandakan gambar berhasil diambil
             }
         }
-
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){
             capturedImageUri = uri
+            isImageCaptured = true // Menandakan gambar berhasil diambil
         }
 
 
@@ -100,6 +113,8 @@ fun imageCaptureFromCamera()
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     Column(
         modifier = Modifier
@@ -185,6 +200,44 @@ fun imageCaptureFromCamera()
         }
     }
 
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(top = 180.dp),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = {
+                val intent = Intent(context, DetailActivity::class.java)
+                context.startActivity(intent) },
+            modifier = Modifier.padding(8.dp),
+            colors = ButtonDefaults.run { buttonColors(Purple80) },
+            enabled = isImageCaptured // Tombol hanya dapat di-klik jika gambar telah diambil
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.scan), // Ganti dengan sumber daya gambar yang sesuai
+                    contentDescription = "Icon", // Deskripsi konten (untuk aksesibilitas)
+                    modifier = Modifier.size(26.dp) // Atur ukuran ikon sesuai kebutuhan
+                )
+                Spacer(modifier = Modifier.width(8.dp)) // Spasi antara ikon dan teks
+                Text(
+                    text = "SCAN",
+                    style = TextStyle(
+                        fontSize = 26.sp,
+                        lineHeight = 36.sp,
+                        fontFamily = FontFamily(Font(R.font.mrexbold)),
+                        fontWeight = FontWeight(800),
+                        color = Color(0xFF3F3E3F),
+                    )
+                )
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -213,6 +266,7 @@ fun imageCaptureFromCamera()
                 contentDescription = null
             )
         }
+
     }
 
 
