@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -41,7 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.capstonecat.R
+import com.dicoding.capstonecat.ViewModelFactory
+import com.dicoding.capstonecat.di.Injection
 import com.dicoding.capstonecat.ui.components.CatItem
 import com.dicoding.capstonecat.ui.components.ScrollToTopButton
 import com.dicoding.capstonecat.ui.theme.CapstoneCatTheme
@@ -50,24 +56,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-//    viewModel: MainViewModel = viewModel(
-//        factory = ViewModelFactory(Injection.provideRepository())
-//    ),
+    viewModel: HomeViewModel = viewModel(
+        factory = ViewModelFactory(Injection.provideRepository(LocalContext.current))
+    ),
     navigateToDetail: (Int) -> Unit,
 ) {
-    HomeContent(modifier)
+    HomeContent(viewModel, navigateToDetail = navigateToDetail, modifier)
 }
 
 
 @Composable
 fun HomeContent(
+    viewModel: HomeViewModel,
+    navigateToDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val query by viewModel.query
     Box(modifier = modifier) {
-        val dummyFunction: (String) -> Unit = { str ->
-            // Logika yang diinginkan di sini
-            println("Mencari kucing: $str")
-        }
         val scope = rememberCoroutineScope()
         val gridState = rememberLazyGridState()
         val showButton: Boolean by remember {
@@ -93,7 +98,6 @@ fun HomeContent(
                         lineHeight = 36.sp,
                         fontFamily = FontFamily(Font(R.font.mrexbold)),
                         fontWeight = FontWeight(800),
-                        color = Color(0xFF3F3E3F),
                     ),
                     modifier = Modifier
                         .padding(top = 10.dp)
@@ -104,11 +108,15 @@ fun HomeContent(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
                 Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
                     shape = RoundedCornerShape(size = 14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 190.dp),
                     elevation = CardDefaults.cardElevation(12.dp),
+
                 ) {
                     Text(
                         text = stringResource(R.string.text_card_home),
@@ -129,15 +137,18 @@ fun HomeContent(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
                 SearchBar(
-                    query = "Persia",
-                    onQueryChange = dummyFunction,
+                    query = query,
+                    onQueryChange = viewModel::search,
                 )
             }
 
             items(30) { index ->
                 CatItem(
                     imageUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
-                    name = "ScottishFold $index"
+                    name = "ScottishFold $index",
+                    modifier = Modifier.clickable {
+                        navigateToDetail(1)
+                    }
                 )
             }
         }
@@ -178,7 +189,6 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         placeholder = {
@@ -187,7 +197,6 @@ fun SearchBar(
         shape = MaterialTheme.shapes.large,
         modifier = modifier
             .fillMaxWidth()
-            //.border(width = 1.dp, color = Color(0xFF000000), shape = RoundedCornerShape(size = 14.dp))
     ) {
     }
 
@@ -198,6 +207,9 @@ fun SearchBar(
 @Preview (showBackground = true)
 fun HomeContentPreview() {
     CapstoneCatTheme {
-        HomeContent()
+        val viewModel: HomeViewModel = viewModel(
+        factory = ViewModelFactory(Injection.provideRepository(LocalContext.current))
+        )
+        //HomeContent(viewModel)
     }
 }

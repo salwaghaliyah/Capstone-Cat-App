@@ -6,8 +6,6 @@ class CatRepository private constructor(
     private val apiService: ApiService
 ){
 
-
-
     companion object {
         @Volatile
         private var instance: CatRepository? = null

@@ -13,17 +13,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.dicoding.capstonecat.ui.navigation.NavigationItem
 import com.dicoding.capstonecat.ui.navigation.Screen
 import com.dicoding.capstonecat.ui.screen.camera.CameraScreen
+import com.dicoding.capstonecat.ui.screen.detail.DetailScreen
 import com.dicoding.capstonecat.ui.screen.favorite.FavoriteScreen
 import com.dicoding.capstonecat.ui.screen.home.HomeScreen
 import com.dicoding.capstonecat.ui.theme.CapstoneCatTheme
@@ -64,6 +68,32 @@ fun CatApp(
                 FavoriteScreen(
                     navigateToDetail = {
                         navController.navigate(Screen.Detail.createRoute(it))
+                    }
+                )
+            }
+            composable(
+                route = Screen.Detail.route,
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
+                val context = LocalContext.current
+                DetailScreen(
+                    id = id,
+                    navigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+            composable(
+                route = Screen.Detail.route,
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                val id = it.arguments?.getInt("id") ?: 0
+                val context = LocalContext.current
+                DetailScreen(
+                    id = id,
+                    navigateBack = {
+                        navController.navigateUp()
                     }
                 )
             }
