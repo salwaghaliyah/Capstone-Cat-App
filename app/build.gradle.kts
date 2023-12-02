@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -74,4 +77,20 @@ dependencies {
 
     //Coil (Menampilkan gambar dari URL)
     implementation ("io.coil-kt:coil-compose:2.4.0")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Okhttp
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
+    //Livedata
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+
+    //RoomDatabase
+//    implementation("androidx.room:room-runtime:2.5.2")
+//    kapt("androidx.room:room-compiler:2.5.2")
+
 }
