@@ -9,4 +9,8 @@
     <string name="scroll_to_top">Scroll to Top</string>
     <string name="fav_prolog">Your Favorite Cat</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="detail_desc_title">Deskripsi</string>
+    <string name="detail_maintenance_title">Cara Merawat</string>
+    <string name="detail_food_title">Rekomendasi Makanan</string>
+    <string name="detail_vit_title">Rekomendasi Vitamin</string>
 </resources>
