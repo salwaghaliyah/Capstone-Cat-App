@@ -18,7 +18,7 @@ class ApiConfig {
                 }
             val client = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.github.com/")   //sementara
+                .baseUrl("https://cahyo-406812.et.r.appspot.com/")   //sementara
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

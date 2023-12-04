@@ -27,6 +27,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +63,29 @@ fun DetailScreen(
         )
     ),
     navigateBack: () -> Unit
+
 ) {
+
+    // buat nampilin data api
+//    val catDetail by viewModel.catDetail.observeAsState()
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.getCatDetail("Persia")
+//    }
+//
+//    catDetail?.let { detail ->
+//        DetailContent(
+//            imgUrl = detail.Images,
+//            title = detail.Ras,
+//            desc = detail.Deskripsi,
+//            imgMknUrl = "https://s3-alpha-sig.figma.com/img/e324/839f/bf06be697ec432f008b5e32a75a1c3d7?Expires=1702252800&Signature=JOIGXIOwm9nk4E3Ci0dCDalDk-ullh~V7AFhGlOBr3BHL6BlQeo~iwdQboelrSYvte2a~H~pMWzqgTvcjeIV3EVgeGBQk3AMz7V3EjSz8u3iTLolTZrZr3yfo~u~4Neag7MwYJ9y09JBhPEhtZcP9VVZrAYt~WjLtq4ibYAGi85OkYjFnkXIEgZu0kf7pWSq0zs1URrPXnBRblPl2DfabRgxskbgK2b0wfruw1mrjBxHayTR5S2eHLJ6EYqUWWtkjbMgFTY1XlPQofEA-gaUj7VIy0RoTcXBUQbSac1j3~WF3wJi3eAyJXAnIgEvFRsJaocU3Dwf3X41U8nQik4FIQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+//            perawatan = detail.Perawatan,
+//            makananFav = "Whiskas",
+//            vitamin = "Fish collagen",
+//            onBackClick = navigateBack,
+//        )
+//    }
+
     DetailContent(
         imgUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
         title = "Scottish Fold",
@@ -118,7 +143,7 @@ fun DetailContent(
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier
                         .padding(16.dp)
-                        .clickable {onBackClick()}
+                        .clickable { onBackClick() }
                         .clip(RoundedCornerShape(10.dp))
                 ) {
                     Icon(

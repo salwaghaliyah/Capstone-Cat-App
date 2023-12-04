@@ -209,8 +209,9 @@ fun imageCaptureFromCamera()
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = {
-                val intent = Intent(context, DetailActivity::class.java)
-                context.startActivity(intent) },
+//                val intent = Intent(context, DetailActivity::class.java)
+//                context.startActivity(intent)
+                      },
             modifier = Modifier.padding(8.dp),
             colors = ButtonDefaults.run { buttonColors(Purple80) },
             enabled = isImageCaptured // Tombol hanya dapat di-klik jika gambar telah diambil

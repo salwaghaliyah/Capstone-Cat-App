@@ -1,6 +1,7 @@
 package com.dicoding.capstonecat.data
 
 import com.dicoding.capstonecat.data.retrofit.ApiService
+import com.dicoding.capstonecat.data.retrofit.CatModel
 
 class CatRepository private constructor(
     private val apiService: ApiService
@@ -15,4 +16,9 @@ class CatRepository private constructor(
                 instance ?: CatRepository(apiService)
             }.also { instance = it }
     }
+
+    suspend fun getCatDetail(breed: String): CatModel {
+        return apiService.getCatInfo(breed).body() ?: throw Exception("Failed to fetch data")
+    }
+
 }
