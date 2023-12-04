@@ -1,6 +1,6 @@
 package com.dicoding.capstonecat.data.retrofit
 
-import retrofit2.Call
+import com.dicoding.capstonecat.data.model.CatModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

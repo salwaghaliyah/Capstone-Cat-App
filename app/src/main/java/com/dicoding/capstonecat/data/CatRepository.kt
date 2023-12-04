@@ -1,7 +1,7 @@
 package com.dicoding.capstonecat.data
 
 import com.dicoding.capstonecat.data.retrofit.ApiService
-import com.dicoding.capstonecat.data.retrofit.CatModel
+import com.dicoding.capstonecat.data.model.CatModel
 
 class CatRepository private constructor(
     private val apiService: ApiService

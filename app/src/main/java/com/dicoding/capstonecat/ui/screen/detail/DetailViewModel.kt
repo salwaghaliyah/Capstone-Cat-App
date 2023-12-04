@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.capstonecat.data.CatRepository
-import com.dicoding.capstonecat.data.retrofit.CatModel
+import com.dicoding.capstonecat.data.model.CatModel
 import kotlinx.coroutines.launch
 
 class DetailViewModel (private val repository: CatRepository): ViewModel() {
