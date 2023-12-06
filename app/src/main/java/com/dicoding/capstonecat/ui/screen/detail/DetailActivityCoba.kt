@@ -210,7 +210,7 @@ fun DetailContent(
                             lineHeight = 18.2.sp,
                             fontFamily = FontFamily(Font(R.font.mrmedium)),
                             fontWeight = FontWeight(300),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Justify,
                         )
                     )
@@ -232,7 +232,7 @@ fun DetailContent(
                             lineHeight = 18.2.sp,
                             fontFamily = FontFamily(Font(R.font.mrmedium)),
                             fontWeight = FontWeight(300),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
 
                             textAlign = TextAlign.Justify,
                         )

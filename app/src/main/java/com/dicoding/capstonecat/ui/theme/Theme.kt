@@ -17,20 +17,26 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    surface = grey, //bottom nav dan search bar
-    primaryContainer = Purple40, //container ungu terang
-    secondaryContainer = Purple20,  //item cat, ungu kicik
+    surface = grey100, //bottom nav dan search bar
+    primaryContainer = grey40, //container ungu terang
+    secondaryContainer = grey40,  //cat item atas,
+    tertiaryContainer = grey100,
+    onTertiaryContainer = grey40,
+    surfaceVariant = grey100,  //cat item bawah
+    onSurfaceVariant = white
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    surface = grey, //bottom nav dan search bar
+    surface = grey20, //bottom nav dan search bar
     primaryContainer = Purple40, //container ungu terang
     secondaryContainer = Purple20,  //item cat, ungu kicik
     tertiaryContainer = white,
-    onTertiaryContainer = Purple40
+    onTertiaryContainer = Purple40,
+    surfaceVariant = white,   //cat item bawah
+    onSurfaceVariant = black
 
 //    onPrimary = black,
 //    surfaceContainer = black,

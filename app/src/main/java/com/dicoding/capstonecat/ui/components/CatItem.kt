@@ -51,7 +51,7 @@ fun CatItem(
             Card (
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(20.dp))
-                    .shadow(6.dp),
+                    .shadow(8.dp),
                 elevation = CardDefaults.cardElevation(72.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
@@ -68,11 +68,12 @@ fun CatItem(
                         .padding(top = 12.dp)
                 )
                 Surface(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp)),
+                        .clip(RoundedCornerShape(0.dp, 0.dp, 20.dp, 20.dp))
+                        .shadow(6.dp),
                     ) {
                     Text(
                         text = name,
@@ -81,7 +82,7 @@ fun CatItem(
                             lineHeight = 20.sp,
                             fontFamily = FontFamily(Font(R.font.mrbold)),
                             fontWeight = FontWeight(700),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
                         ),
                         modifier = Modifier

@@ -117,7 +117,7 @@ fun imageCaptureFromCamera()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            .padding(20.dp),
         verticalArrangement = Arrangement.Top, // Letakkan di bagian atas
         horizontalAlignment = Alignment.CenterHorizontally, // Posisikan di tengah horizontal
 
@@ -129,7 +129,6 @@ fun imageCaptureFromCamera()
                 lineHeight = 36.sp,
                 fontFamily = FontFamily(Font(R.font.mrexbold)),
                 fontWeight = FontWeight(800),
-                color = Color(0xFF3F3E3F),
             )
         )
     }
@@ -193,7 +192,9 @@ fun imageCaptureFromCamera()
         Spacer(modifier = Modifier.height(12.dp))
 
         FloatingActionButton(
-            onClick = { launcher.launch("image/*") }) {
+            onClick = { launcher.launch("image/*") },
+            contentColor = Color.Black
+        ) {
             Icon(painter = painterResource(id = R.drawable.ic_image), contentDescription = "galery")
         }
     }
@@ -230,7 +231,6 @@ fun imageCaptureFromCamera()
                         lineHeight = 36.sp,
                         fontFamily = FontFamily(Font(R.font.mrexbold)),
                         fontWeight = FontWeight(800),
-                        color = Color(0xFF3F3E3F),
                     )
                 )
             }
