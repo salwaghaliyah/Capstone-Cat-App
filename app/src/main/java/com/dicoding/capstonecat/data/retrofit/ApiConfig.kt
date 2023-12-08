@@ -22,7 +22,7 @@ class ApiConfig {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
-
+            
             return retrofit.create(ApiService::class.java)
         }
     }

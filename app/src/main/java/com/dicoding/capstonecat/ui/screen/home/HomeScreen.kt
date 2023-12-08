@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,10 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,8 +31,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.capstonecat.R
 import com.dicoding.capstonecat.ViewModelFactory
+import com.dicoding.capstonecat.data.model.Cat
 import com.dicoding.capstonecat.di.Injection
 import com.dicoding.capstonecat.ui.components.CatItem
 import com.dicoding.capstonecat.ui.components.ScrollToTopButton
@@ -66,7 +68,14 @@ fun HomeScreen(
     ),
     navigateToDetail: (Int) -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     HomeContent(viewModel, navigateToDetail = navigateToDetail, modifier)
+
+    LaunchedEffect(true) {
+        // Panggil fungsi getAllCats() saat HomeScreen diinisialisasi
+        viewModel.getAllCatsFromApi()
+    }
 }
 
 
@@ -76,7 +85,9 @@ fun HomeContent(
     navigateToDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val cats: List<Cat> by viewModel.cats.observeAsState(emptyList())
     val query by viewModel.query
+
     Box(modifier = modifier) {
         val scope = rememberCoroutineScope()
         val gridState = rememberLazyGridState()
@@ -158,15 +169,25 @@ fun HomeContent(
                 )
             }
 
-            items(30) { index ->
+            items(cats) { cat ->
                 CatItem(
-                    imageUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
-                    name = "ScottishFold $index",
+                    imageUrl = cat.Kucing,
+                    name = cat.Ras,
                     modifier = Modifier.clickable {
                         navigateToDetail(1)
                     }
                 )
             }
+
+//            items(30) { index ->
+//                CatItem(
+//                    imageUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+//                    name = "ScottishFold $index",
+//                    modifier = Modifier.clickable {
+//                        navigateToDetail(1)
+//                    }
+//                )
+//            }
         }
 
         AnimatedVisibility(
@@ -215,8 +236,6 @@ fun SearchBar(
             .fillMaxWidth()
     ) {
     }
-
-
 }
 
 @Composable
