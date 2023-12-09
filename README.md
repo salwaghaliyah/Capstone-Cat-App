@@ -13,36 +13,28 @@ Nama anggota tim :
 
 # Backend Catstone
 
-Aplikasi ini menyediakan informasi tentang kucing, makanan, vitamin dan cara perawatannya.
+Aplikasi ini menyediakan informasi tentang kucing, makanan, vitamin dan cara perawatannya. Terdapat juga fitur Scan untuk mengidentifikasi jenis kucing yang anda temukan.
 
 ## Fitur
 
-- */api/data/kucing?breed=Sphynx*: Mendapatkan informasi tentang kucing berdasarkan rasnya,deskrips,gambar kucing,gambar vitamin dan gambar makanan.
-- */api/data/all* : Memunculkan semua data ras,deskrips,gambar kucing,gambar vitamin dan gambar makanan.
+- Menyediakan berbagai jenis ras kucing beserta gambar, deskripsi, cara perawatan yang sesuai, hingga rekomendasi makanan dan vitamin untuk tiap ras kucing.
+- Terdapat fitur untuk memindai kucing melalui gambar yang dapat diambil dari kamera maupun galeri
+- Fitur favorite untuk menyimpan kucing favorite anda sehingga lebih mudah untuk melihatnya kembali.
 
 ## Cara Menggunakan
 
-1. Pastikan Anda memiliki Node.js diinstal.
-2. Clone repositori ini ke komputer Anda.
-3. Buka terminal dan masuk ke direktori proyek.
-4. Jalankan npm init -y
-5. Jalankan npm install express untuk menginstal semua dependensi.
-6. Jalankan npm start untuk memulai server.
-7. Buka browser atau gunakan alat pengujian API seperti Postman untuk mengakses endpoint yang tersedia.
+1. Download kode "Clone or download."
+2. Buka terminal atau command prompt di komputer Anda.
+3. Gunakan perintah git clone di terminal/command prompt untuk mengunduh repositori ke komputer lokal. Contoh: git clone https://github.com/username/nama-repo.git
+4. Jalankan aplikasi
 
 ## Pengembangan Lanjutan
 
 Plan tim kami dapat mengembangkan aplikasi ini lebih lanjut dengan menambahkan fitur seperti:
 
-- Penyimpanan data dalam database untuk informasi kucing, makanan, dan vitamin.
-- Menambahkan endpoint untuk menambah, mengedit, atau menghapus data.
-- Membuat api payment gateway dimana nanti aplikasi kami bisa menjual makanan kucing dan vitamin
-
-## Catatan
-
-Pastikan untuk menyesuaikan logika dalam controller sesuai dengan kebutuhan aplikasi Anda.
-
-Terima kasih telah menggunakan Backend Catstone!
+- Menambahkan fitur daftar dokter hewan terdekat
+- Menambahkan fitur live chat bersama dokter hewan
+- Menambahkan fitur rekomendasi petshop terdekat
 
 ## Dokument Capstone 
 [Project Plan](https://docs.google.com/document/d/1JTYEJDSnWBDMwW1MQkx22lLPjyEEPRrtBytenAW_JC8/edit)
