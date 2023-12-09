@@ -20,14 +20,21 @@ class HomeViewModel(private val repository: CatRepository): ViewModel()
     private val _cats = MutableLiveData<List<Cat>>()
     val cats: LiveData<List<Cat>> get() = _cats
 
-    fun search(newQuery: String) {
-        _query.value = newQuery
+    private var originalCatList: List<Cat> = emptyList()
+
+    fun search(query: String) {
+        _query.value = query
+        val filteredCats = originalCatList.filter { cat ->
+            cat.Ras.contains(query, ignoreCase = true)
+        }
+        _cats.value = filteredCats
     }
 
     fun getAllCatsFromApi() {
         viewModelScope.launch {
             try {
                 val catsList = repository.getAllCatsFromApi()
+                originalCatList = catsList
                 _cats.value = catsList
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error fetching cats from API: ${e.message}")

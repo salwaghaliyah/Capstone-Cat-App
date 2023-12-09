@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -131,32 +134,41 @@ fun HomeContent(
                         .fillMaxWidth()
                         .heightIn(min = 190.dp),
                     elevation = CardDefaults.cardElevation(12.dp),
-
                 ) {
-                    Row {
-                        Text(
-                            text = stringResource(R.string.text_card_home),
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                                lineHeight = 22.sp,
-                                fontFamily = FontFamily(Font(R.font.mrbold)),
-                                fontWeight = FontWeight(400),
-                                color = Color(0xFF000000),
-                            ),
-                            modifier = Modifier
-                                .padding(start = 22.dp, top = 34.dp, end = 141.dp)
-                        )
-                        // ini dia gamau muncul
-                        Image(
-                            painter = painterResource(R.drawable.whitecat),
-                            contentDescription = "cat_picture",
-                            modifier = Modifier
-                                .height(140.dp)
-                                .fillMaxWidth()
-                                .padding(start = 22.dp, top = 16.dp, end = 10.dp)
-                        )
+                    Box(Modifier.padding(16.dp)) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.text_card_home),
+                                    style = TextStyle(
+                                        fontSize = 18.sp,
+                                        lineHeight = 22.sp,
+                                        fontFamily = FontFamily(Font(R.font.mrbold)),
+                                        fontWeight = FontWeight(400),
+                                        color = Color(0xFF000000),
+                                    ),
+                                    modifier = Modifier.wrapContentSize()
+                                )
+                            }
+
+                            Image(
+                                painter = painterResource(R.drawable.whitecat2),
+                                contentDescription = "cat_picture",
+                                modifier = Modifier
+                                    .height(140.dp)
+                                    .width(140.dp) // Sesuaikan ukuran gambar
+                            )
+                        }
                     }
                 }
+
+
+
             }
 
             item(
@@ -164,7 +176,9 @@ fun HomeContent(
             ) {
                 SearchBar(
                     query = query,
-                    onQueryChange = viewModel::search,
+                    onQueryChange = { newQuery ->
+                        viewModel.search(newQuery)
+                    },
                 )
             }
 
