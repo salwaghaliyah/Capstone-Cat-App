@@ -15,8 +15,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,13 +31,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dicoding.capstonecat.R
 import com.dicoding.capstonecat.ViewModelFactory
+import com.dicoding.capstonecat.data.entity.CatFavEntity
 import com.dicoding.capstonecat.di.Injection
+import com.dicoding.capstonecat.ui.common.UiState
 import com.dicoding.capstonecat.ui.components.CatItem
 import com.dicoding.capstonecat.ui.components.ScrollToTopButton
 import com.dicoding.capstonecat.ui.theme.CapstoneCatTheme
@@ -47,75 +52,107 @@ fun FavoriteScreen(
     viewModel: FavoriteViewModel = viewModel(
         factory = ViewModelFactory(Injection.provideRepository(LocalContext.current))
     ),
-    navigateToDetail: (Int) -> Unit
+    navigateToDetail: (String) -> Unit
 ) {
-    FavoriteContent(navigateToDetail = navigateToDetail)
+    viewModel.uiState.collectAsState(UiState.Loading).value.let {
+        when (it) {
+            is UiState.Loading -> {
+                viewModel.getFavCats()
+            }
+            is UiState.Success -> {
+                FavoriteContent(
+                    cat = it.data,
+                    navigateToDetail = navigateToDetail,
+                    modifier = modifier
+                )
+            }
+            else -> ""
+        }
+    }
+
 }
 
 
 @Composable
 fun FavoriteContent(
-    navigateToDetail: (Int) -> Unit,
+    cat: List<CatFavEntity>,
+    navigateToDetail: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-   Box(
-       modifier = modifier
-   ) {
-       val scope = rememberCoroutineScope()
-       val gridState = rememberLazyGridState()
-       val showButton: Boolean by remember {
-           derivedStateOf { gridState.firstVisibleItemIndex > 2 }
-       }
 
-       LazyVerticalGrid(
-           state = gridState,
-           columns = GridCells.Adaptive(130.dp),
-           contentPadding = PaddingValues(10.dp),
-           horizontalArrangement = Arrangement.spacedBy(12.dp),
-           verticalArrangement = Arrangement.spacedBy(10.dp),
+   if (cat.isNotEmpty()) {
+       Box(
            modifier = modifier
-               .fillMaxSize()
-               .padding(horizontal = 12.dp)
        ) {
-           item(
-               span = { GridItemSpan(maxLineSpan) }
-           ) {
-               Text(
-                   text = stringResource(R.string.fav_prolog),
-                   style = TextStyle(
-                       fontSize = 24.sp,
-                       lineHeight = 36.sp,
-                       fontFamily = FontFamily(Font(R.font.mrexbold)),
-                       fontWeight = FontWeight(800),
-                   ),
-                   modifier = Modifier
-                       .padding(vertical = 10.dp)
-               )
+           val scope = rememberCoroutineScope()
+           val gridState = rememberLazyGridState()
+           val showButton: Boolean by remember {
+               derivedStateOf { gridState.firstVisibleItemIndex > 2 }
            }
-           items(20) { index ->
-               CatItem(
-                   imageUrl = "https://s3-alpha-sig.figma.com/img/4041/f9ec/4e24bf6dc3fe057328c6c4ff71fe4312?Expires=1701648000&Signature=F035k3z57rxjx7nieKmaZD~vH-c2G0RrFHU5YKh0hEMwl~y9pjPLkoBvZT-55BHtT2k6UULKJkRVrkVSkI7xvQdiDgDvanccYUqpAYvTNTKjjHm9lSjmcWJbT6pPjozSO-dfXg1O9yoh8RPh44x1eO5zUChBcGGDYRRPIqciAJ7zyoOCMx5hRYULxk0Rd9eBcs-ERLBFNNnqH1Ear8ZpupH4F1i-J6-jqb-Gs6kQu5jRqZSA9bka50AbZp9tvW9a9zGRhBQb9sv-nBH9Ockveistn801NhaO9cnaFMdoQPXfw5mINicPyFLhTM-QozK6m6oig2utlF5Cm1R2y1zS5A__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
-                   name = "ScottishFold $index",
-                   modifier = Modifier.clickable {
-                       navigateToDetail(1)
+
+           LazyVerticalGrid(
+               state = gridState,
+               columns = GridCells.Adaptive(130.dp),
+               contentPadding = PaddingValues(10.dp),
+               horizontalArrangement = Arrangement.spacedBy(12.dp),
+               verticalArrangement = Arrangement.spacedBy(10.dp),
+               modifier = modifier
+                   .fillMaxSize()
+                   .padding(horizontal = 12.dp)
+           ) {
+               item(
+                   span = { GridItemSpan(maxLineSpan) }
+               ) {
+                   Text(
+                       text = stringResource(R.string.fav_prolog),
+                       style = TextStyle(
+                           fontSize = 24.sp,
+                           lineHeight = 36.sp,
+                           fontFamily = FontFamily(Font(R.font.mrexbold)),
+                           fontWeight = FontWeight(800),
+                       ),
+                       modifier = Modifier
+                           .padding(vertical = 10.dp)
+                   )
+               }
+               items(cat.size) { index ->
+                   CatItem(
+                       imageUrl = cat[index].imgUrl!!,
+                       name = cat[index].breed,
+                       modifier = Modifier.clickable {
+                           navigateToDetail(cat[index].breed)
+                       }
+                   )
+               }
+           }
+           AnimatedVisibility(
+               visible = showButton,
+               enter = fadeIn() + slideInVertically(),
+               exit = fadeOut() + slideOutVertically(),
+               modifier = Modifier
+                   .padding(bottom = 10.dp)
+                   .align(Alignment.BottomCenter)
+           ) {
+               ScrollToTopButton(
+                   onClick = {
+                       scope.launch {
+                           gridState.scrollToItem(index = 0)
+                       }
                    }
                )
            }
        }
-       AnimatedVisibility(
-           visible = showButton,
-           enter = fadeIn() + slideInVertically(),
-           exit = fadeOut() + slideOutVertically(),
-           modifier = Modifier
-               .padding(bottom = 10.dp)
-               .align(Alignment.BottomCenter)
+   } else {
+       Box(
+           contentAlignment = Alignment.Center,
+           modifier = modifier.fillMaxSize()
        ) {
-           ScrollToTopButton(
-               onClick = {
-                   scope.launch {
-                       gridState.scrollToItem(index = 0)
-                   }
-               }
+           Text(
+               text = "Kucing Favorite Kosong",
+               style = MaterialTheme.typography.titleMedium.copy(
+                   fontWeight = FontWeight.Bold
+               ),
+               textAlign = TextAlign.Center,
            )
        }
    }
@@ -125,7 +162,7 @@ fun FavoriteContent(
 @Composable
 fun FavoriteContentPreview() {
     CapstoneCatTheme {
-        FavoriteContent(navigateToDetail = {})
+        //FavoriteContent(navigateToDetail = {})
     }
 }
 

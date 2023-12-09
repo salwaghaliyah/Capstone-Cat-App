@@ -66,7 +66,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(
         factory = ViewModelFactory(Injection.provideRepository(LocalContext.current))
     ),
-    navigateToDetail: (Int) -> Unit,
+    navigateToDetail: (String) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -82,14 +82,13 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     viewModel: HomeViewModel,
-    navigateToDetail: (Int) -> Unit,
+    navigateToDetail: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cats: List<Cat> by viewModel.cats.observeAsState(emptyList())
     val query by viewModel.query
 
-    Box(modifier = modifier) {
-        val scope = rememberCoroutineScope()
+    Box(modifier = modifier) {        val scope = rememberCoroutineScope()
         val gridState = rememberLazyGridState()
         val showButton: Boolean by remember {
             derivedStateOf { gridState.firstVisibleItemIndex > 4 }
@@ -174,7 +173,7 @@ fun HomeContent(
                     imageUrl = cat.Kucing,
                     name = cat.Ras,
                     modifier = Modifier.clickable {
-                        navigateToDetail(1)
+                        navigateToDetail(cat.Ras)
                     }
                 )
             }

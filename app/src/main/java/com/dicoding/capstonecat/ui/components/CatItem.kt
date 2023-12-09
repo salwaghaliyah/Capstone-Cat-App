@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -49,14 +48,13 @@ fun CatItem(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Card (
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .shadow(8.dp),
-                elevation = CardDefaults.cardElevation(72.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
                 ),
-
+                elevation = CardDefaults.cardElevation(32.dp),
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .shadow(8.dp),
             ) {
                 AsyncImage(
                     model = imageUrl,
@@ -64,7 +62,7 @@ fun CatItem(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(135.dp)
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 14.dp)
                         .padding(top = 12.dp)
                 )
                 Surface(
@@ -91,7 +89,6 @@ fun CatItem(
                     )
                 }
             }
-
         }
     }
 }

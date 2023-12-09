@@ -56,8 +56,8 @@ fun CatApp(
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(
-                    navigateToDetail = { id ->
-                        navController.navigate(Screen.Detail.createRoute(id))
+                    navigateToDetail = { breed ->
+                        navController.navigate(Screen.Detail.createRoute(breed))
                     }
                 )
             }
@@ -73,12 +73,12 @@ fun CatApp(
             }
             composable(
                 route = Screen.Detail.route,
-                arguments = listOf(navArgument("id") { type = NavType.StringType })
+                arguments = listOf(navArgument("breed") { type = NavType.StringType })
             ) {
-                val id = it.arguments?.getInt("id") ?: 0
+                val breed = it.arguments?.getString("breed") ?: ""
                 val context = LocalContext.current
                 DetailScreen(
-                    id = id,
+                    breed = breed,
                     navigateBack = {
                         navController.navigateUp()
                     }
@@ -86,12 +86,12 @@ fun CatApp(
             }
             composable(
                 route = Screen.Detail.route,
-                arguments = listOf(navArgument("id") { type = NavType.StringType })
+                arguments = listOf(navArgument("breed") { type = NavType.StringType })
             ) {
-                val id = it.arguments?.getInt("id") ?: 0
+                val breed = it.arguments?.getString("breed") ?: ""
                 val context = LocalContext.current
                 DetailScreen(
-                    id = id,
+                    breed = breed,
                     navigateBack = {
                         navController.navigateUp()
                     }
