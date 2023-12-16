@@ -1,9 +1,10 @@
 package com.dicoding.capstonecat.data
 
+import android.net.Uri
 import com.dicoding.capstonecat.data.entity.CatFavEntity
 import com.dicoding.capstonecat.data.model.Cat
 import com.dicoding.capstonecat.data.retrofit.ApiService
-import com.dicoding.capstonecat.data.model.CatModel
+import com.dicoding.capstonecat.data.model.CatPredictionResult
 import com.dicoding.capstonecat.data.response.CatResponseItem
 import com.dicoding.capstonecat.data.room.CatDao
 import kotlinx.coroutines.flow.Flow
@@ -13,11 +14,6 @@ class CatRepository private constructor(
     private val apiService: ApiService,
     private val catDao: CatDao
 ){
-
-    suspend fun getCatDetail(breed: String): CatModel {
-        return apiService.getCatInfo(breed).body() ?: throw Exception("Failed to fetch data")
-    }
-
     suspend fun getAllCatsFromApi(): List<Cat> {
         return try {
             apiService.getAllCats()
@@ -45,6 +41,13 @@ class CatRepository private constructor(
         return flowOf(true)
     }
 
+
+
+    suspend fun predictCatType(data: Uri?): CatPredictionResult {
+        val response = apiService.predictCatType(data)
+        return response.body() ?: throw CatPredictionFailedException("Failed to predict cat type")
+    }
+
     companion object {
         @Volatile
         private var instance: CatRepository? = null
@@ -57,3 +60,4 @@ class CatRepository private constructor(
 }
 
 class CatNotFoundException(message: String) : Exception(message)
+class CatPredictionFailedException(message: String) : Exception(message)
