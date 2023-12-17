@@ -110,8 +110,13 @@ fun imageCaptureFromCamera(viewModel: CameraViewModel, navigateToDetail: (String
 
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){
-            capturedImageUri = uri
-            isImageCaptured = true
+            if (it) {
+                capturedImageUri = uri
+                isImageCaptured = true
+            } else {
+                capturedImageUri = Uri.EMPTY
+                isImageCaptured = false
+            }
         }
 
     viewModel.predictionResult.collectAsState(initial = UiState.Loading).value.let {
