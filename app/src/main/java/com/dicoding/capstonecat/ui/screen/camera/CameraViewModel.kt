@@ -1,26 +1,27 @@
 package com.dicoding.capstonecat.ui.screen.camera
 
-import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dicoding.capstonecat.data.CatRepository
-import com.dicoding.capstonecat.data.model.CatPredictionResult
+import com.dicoding.capstonecat.data.response.ScanResponse
+import com.dicoding.capstonecat.ui.common.UiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
 class CameraViewModel(private val repository: CatRepository) : ViewModel() {
-    private val _predictionResult = MutableLiveData<CatPredictionResult>()
-    val predictionResult: LiveData<CatPredictionResult>
-        get() = _predictionResult
 
-    fun sendImageAndGetPrediction(imageUri: Uri?) {
+    private val _predictionResult: MutableStateFlow<UiState<ScanResponse>> = MutableStateFlow(UiState.Loading)
+    val predictionResult: StateFlow<UiState<ScanResponse>> get() = _predictionResult
+
+    fun sendImageAndGetPrediction(imageFile: MultipartBody.Part) {
         viewModelScope.launch {
             try {
-                val prediction = repository.predictCatType(imageUri)
-                _predictionResult.postValue(prediction)
+                val prediction = repository.predictCatType(imageFile)
+                _predictionResult.value = UiState.Success(prediction)
             } catch (e: Exception) {
-                // Tangani kesalahan jika prediksi gagal
+                _predictionResult.value = UiState.Error(e.message.toString())
             }
         }
     }

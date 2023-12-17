@@ -2,13 +2,13 @@ package com.dicoding.capstonecat.ui.screen.camera
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,8 +31,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,15 +52,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
-import com.dicoding.capstonecat.DetailActivity
 import com.dicoding.capstonecat.R
 import com.dicoding.capstonecat.ViewModelFactory
 import com.dicoding.capstonecat.di.Injection
+import com.dicoding.capstonecat.ui.common.UiState
 import com.dicoding.capstonecat.ui.theme.Purple80
-import org.tensorflow.lite.DataType
-import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import reduceFileImage
+import uriToFile
 import java.io.File
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
@@ -68,17 +71,19 @@ import java.util.Objects
 @Composable
 fun CameraScreen(
     modifier: Modifier = Modifier,
-    viewModel: CameraViewModel = viewModel(factory = ViewModelFactory(Injection.provideRepository(LocalContext.current)))
+    viewModel: CameraViewModel = viewModel(factory = ViewModelFactory(Injection.provideRepository(LocalContext.current))),
+    navigateToDetail: (String) -> Unit,
 ) {
-    imageCaptureFromCamera(viewModel)
+    imageCaptureFromCamera(viewModel, navigateToDetail)
 }
 
 @Composable
-fun imageCaptureFromCamera(viewModel: CameraViewModel)
+fun imageCaptureFromCamera(viewModel: CameraViewModel, navigateToDetail: (String) -> Unit)
 {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
     var predictionText by remember { mutableStateOf("") }
+    var catBreed by remember { mutableStateOf("") }
     val showDialog = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -91,6 +96,7 @@ fun imageCaptureFromCamera(viewModel: CameraViewModel)
     var capturedImageUri by remember {
         mutableStateOf<Uri>(Uri.EMPTY)
     }
+
 
     var isImageCaptured by remember { mutableStateOf(false) }
 
@@ -108,12 +114,28 @@ fun imageCaptureFromCamera(viewModel: CameraViewModel)
             isImageCaptured = true
         }
 
-    viewModel.predictionResult.observeAsState().value?.let { prediction ->
-        predictionText = "Hasil Prediksi:\n" +
-                "Tipe Kucing: ${prediction.data?.cat_type_prediction}\n" +
-                "Confidence: ${prediction.data?.confidence}"
+    viewModel.predictionResult.collectAsState(initial = UiState.Loading).value.let {
+        when(it) {
+            is UiState.Loading -> {
+                predictionText = "Memproses..."
+            }
+            is UiState.Success -> {
+                val confidence = it.data.data?.confidence.toString().toDouble()
+                val format = DecimalFormat("0.0%")
+                val confidenceFormat = format.format(confidence)
+                predictionText = "Hasil Prediksi:\n" +
+                "Tipe Kucing: ${it.data.data?.catTypesPrediction}\n" +
+                "Confidence: $confidenceFormat"
+                catBreed = it.data.data?.catTypesPrediction.toString()
+            }
+            is UiState.Error -> {
+                predictionText = "Hasil Prediksi:\n" +
+                        "Gagal Memprediksi! \n" +
+                         it.errorMessage
+            }
+            else -> {}
+        }
     }
-
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -226,7 +248,15 @@ fun imageCaptureFromCamera(viewModel: CameraViewModel)
         Button(
             onClick = {
                 if (isImageCaptured) {
-                    viewModel.sendImageAndGetPrediction(capturedImageUri)
+                    val imageFile = uriToFile(capturedImageUri, context).reduceFileImage()
+                    Log.d("Image File", "showImage: ${imageFile.path}")
+                    val requestImgFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+                    val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                        "image",
+                        imageFile.name,
+                        requestImgFile
+                    )
+                    viewModel.sendImageAndGetPrediction(imageMultiPart)
                     showDialog.value = true
                 }
             },
@@ -269,6 +299,12 @@ fun imageCaptureFromCamera(viewModel: CameraViewModel)
                 Button(
                     onClick = {
                         showDialog.value = false
+                        if (catBreed.isEmpty()){
+                            Toast.makeText(context, "Terjadi Kesalahan!", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        //Toast.makeText(context, catBreed, Toast.LENGTH_SHORT).show()
+                        navigateToDetail(catBreed)
                     }
                 ) {
                     Text("OK")

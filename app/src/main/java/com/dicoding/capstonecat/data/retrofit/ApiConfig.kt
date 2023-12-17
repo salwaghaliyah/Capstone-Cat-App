@@ -26,7 +26,7 @@ class ApiConfig {
             return retrofit.create(ApiService::class.java)
         }
 
-        fun getSecondApiService(): ApiService {
+        fun getSecondApiService(): ApiService2 {
             val loggingInterceptor =
                 if (BuildConfig.DEBUG){
                     HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -40,7 +40,7 @@ class ApiConfig {
                 .client(client)
                 .build()
 
-            return retrofit.create(ApiService::class.java)
+            return retrofit.create(ApiService2::class.java)
         }
     }
 }

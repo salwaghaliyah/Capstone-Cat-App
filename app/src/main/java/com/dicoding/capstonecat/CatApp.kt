@@ -62,7 +62,11 @@ fun CatApp(
                 )
             }
             composable(Screen.Camera.route) {
-                CameraScreen()
+                CameraScreen(
+                    navigateToDetail = {
+                        navController.navigate(Screen.Detail.createRoute(it))
+                    }
+                )
             }
             composable(Screen.Favorite.route) {
                 FavoriteScreen(

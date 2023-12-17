@@ -95,8 +95,6 @@ fun DetailScreen(
             }
             is UiState.Success -> {
                 val data = uiState.data
-//                val listMakanan = arrayOf(data.makanan1, data.makanan2, data.makanan3)
-//                val listVitamin = arrayOf(data.vitamin1, data.vitamin2, data.vitamin3)
                 DetailContent(
                     imgUrl = data.kucing ?: "",
                     breed = data.ras ?: "Unknown",
@@ -122,26 +120,6 @@ fun DetailScreen(
             else -> ""
         }
     }
-
-    // buat nampilin data api
-//    val catDetail by viewModel.catDetail.observeAsState()
-//
-//    LaunchedEffect(Unit) {
-//        viewModel.getCatDetail("Persia")
-//    }
-//
-//    catDetail?.let { detail ->
-//        DetailContent(
-//            imgUrl = detail.Images,
-//            title = detail.Ras,
-//            desc = detail.Deskripsi,
-//            imgMknUrl = "https://s3-alpha-sig.figma.com/img/e324/839f/bf06be697ec432f008b5e32a75a1c3d7?Expires=1702252800&Signature=JOIGXIOwm9nk4E3Ci0dCDalDk-ullh~V7AFhGlOBr3BHL6BlQeo~iwdQboelrSYvte2a~H~pMWzqgTvcjeIV3EVgeGBQk3AMz7V3EjSz8u3iTLolTZrZr3yfo~u~4Neag7MwYJ9y09JBhPEhtZcP9VVZrAYt~WjLtq4ibYAGi85OkYjFnkXIEgZu0kf7pWSq0zs1URrPXnBRblPl2DfabRgxskbgK2b0wfruw1mrjBxHayTR5S2eHLJ6EYqUWWtkjbMgFTY1XlPQofEA-gaUj7VIy0RoTcXBUQbSac1j3~WF3wJi3eAyJXAnIgEvFRsJaocU3Dwf3X41U8nQik4FIQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
-//            perawatan = detail.Perawatan,
-//            makananFav = "Whiskas",
-//            vitamin = "Fish collagen",
-//            onBackClick = navigateBack,
-//        )
-//    }
 
 }
 
