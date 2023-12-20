@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CapstoneCat</string>
+    <string name="app_name">CatStone</string>
     <string name="item_title_home">Home_page</string>
     <string name="item_title_camera">camera_page</string>
     <string name="item_title_favorite">favorite_page</string>

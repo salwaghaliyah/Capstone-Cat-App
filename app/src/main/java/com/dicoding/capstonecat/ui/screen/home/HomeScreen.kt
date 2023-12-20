@@ -49,6 +49,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +91,8 @@ fun HomeContent(
     val cats: List<Cat> by viewModel.cats.observeAsState(emptyList())
     val query by viewModel.query
 
-    Box(modifier = modifier) {        val scope = rememberCoroutineScope()
+    Box(modifier = modifier) {
+        val scope = rememberCoroutineScope()
         val gridState = rememberLazyGridState()
         val showButton: Boolean by remember {
             derivedStateOf { gridState.firstVisibleItemIndex > 4 }
@@ -160,16 +162,12 @@ fun HomeContent(
                                 contentDescription = "cat_picture",
                                 modifier = Modifier
                                     .height(140.dp)
-                                    .width(140.dp) // Sesuaikan ukuran gambar
+                                    .width(140.dp)
                             )
                         }
                     }
                 }
-
-
-
             }
-
             item(
                 span = { GridItemSpan(maxLineSpan) }
             ) {
@@ -180,16 +178,45 @@ fun HomeContent(
                     },
                 )
             }
-
-            items(cats) { cat ->
-                CatItem(
-                    imageUrl = cat.Kucing,
-                    name = cat.Ras,
-                    modifier = Modifier.clickable {
-                        navigateToDetail(cat.Ras)
+            if (cats.isEmpty() && query.isNotEmpty()) {
+                item {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Text(
+                            text = "Ras Kucing Tidak Ditemukan",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .wrapContentSize()
+                        )
                     }
-                )
+                }
+            } else {
+                items(cats) { cat ->
+                    CatItem(
+                        imageUrl = cat.Kucing,
+                        name = cat.Ras,
+                        modifier = Modifier.clickable {
+                            navigateToDetail(cat.Ras)
+                        }
+                    )
+                }
             }
+//            items(cats) { cat ->
+//                CatItem(
+//                    imageUrl = cat.Kucing,
+//                    name = cat.Ras,
+//                    modifier = Modifier.clickable {
+//                        navigateToDetail(cat.Ras)
+//                    }
+//                )
+//            }
         }
 
         AnimatedVisibility(
